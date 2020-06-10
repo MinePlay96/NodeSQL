@@ -1,0 +1,35 @@
+{
+  "name": "nodesql",
+  "version": "0.0.0",
+  "description": "",
+  "main": "../index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MinePlay96/nodeSQL.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MinePlay96/nodeSQL/issues"
+  },
+  "homepage": "https://github.com/MinePlay96/nodeSQL#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mssql": "^6.2.0",
+    "mysql2": "^2.1.0",
+    "socketio": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.6",
+    "@types/readable-stream": "2.3.5",
+    "@types/socket.io": "^2.1.8",
+    "@typescript-eslint/eslint-plugin": "^2.34.0",
+    "@typescript-eslint/parser": "^2.34.0",
+    "eslint": "^6.8.0",
+    "eslint-config-strauss-cleanone-typescript": "^1.0.2",
+    "typescript": "^3.9.3"
+  }
+}
