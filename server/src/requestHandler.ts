@@ -27,13 +27,16 @@ export default async function requestHandler(socket: socketIo.Socket): Promise<v
       .on('end', () => socket.emit('end'));
   }
 
-  function authHandler(authData: IAuthData): void {
+  function authHandler(connectionData: IAuthData): void {
+    const { connector: connectorName, ...authData } = connectionData;
+
+    // TODO: solve this better
     isAuthed = true;
-    // eslint-disable-next-line prefer-destructuring
-    connector = new connectors[authData.connector](authData);
+    // TODO: add Check if it is set connectors[authData.connector](authData)
+    connector = new connectors[connectorName](authData);
     connector.connect()
       .then(() => {
-        socket.emit('connected', true);
+        socket.emit('authed', true);
       })
       .catch(err => {
         socket.emit('error', err);
@@ -43,4 +46,10 @@ export default async function requestHandler(socket: socketIo.Socket): Promise<v
   socket.on('auth', authHandler);
   socket.on('query', queryHandler);
 
+  socket.on('error', error => socket.emit('exeption', error));
+  socket.on('disconnect', () => {
+    if (isAuthed) {
+      connector.close();
+    }
+  });
 }

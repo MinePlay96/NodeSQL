@@ -18,4 +18,6 @@ export abstract class BaseConnector {
   public abstract async connect(): Promise<this>;
 
   public abstract query(query: string): BaseStreamingHandler;
+
+  public abstract close(): void;
 }

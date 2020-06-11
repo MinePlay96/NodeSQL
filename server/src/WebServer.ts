@@ -1,23 +1,16 @@
 import express from 'express';
+import { loadConnectors } from './connectorLoader';
 import http from 'http';
-import path from 'path';
-
-const CACHE_MAX_AGE = 60000;
+import router from './webRouter';
 
 export default class WebServer {
   public httpServer: http.Server;
 
   public constructor() {
     const app = express();
-    const publicPath = path.join(__dirname, '../../', '/frondend/dist');
 
     this.httpServer = http.createServer(app);
-
-    app.use(express.static(publicPath, {
-      cacheControl: true,
-      maxAge: CACHE_MAX_AGE
-    }));
-    app.use('/*', express.static(path.join(publicPath, 'index.html')));
+    app.use(router);
   }
 
   public async listen(port: number): Promise<this> {

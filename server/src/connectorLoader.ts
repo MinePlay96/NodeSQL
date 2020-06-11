@@ -20,13 +20,11 @@ export async function loadConnector(name: string): Promise<IConnectorData> {
 
 // REDO: make it better
 export async function loadConnectors(): Promise<IConnectors> {
-  if (!Object.keys(connectors).length) {
+  if (Object.keys(connectors).length > Number(null)) {
     return connectors;
   }
   const connectorsFiles = await fs.readdir(CONNECTORS_PATH);
   const connectorsLoaderPrommises: Array<Promise<IConnectorData>> = [];
-
-  console.log(connectorsFiles);
 
   connectorsFiles.forEach(connectorFile => {
     const matches = (/(?<fileName>.*?)\.js/u).exec(connectorFile);

@@ -1,10 +1,7 @@
 import { BaseConnector } from './BaseConnector';
 
-export interface IAuthData {
+export interface IAuthData extends IConnectionOptions {
   connector: string;
-  user: string;
-  password: string;
-  host: string;
 }
 
 export interface IConnectors {
@@ -25,4 +22,5 @@ export interface IConnectionOptions {
   user: string;
   password: string;
   database?: string;
+  port?: number;
 }
