@@ -21,7 +21,7 @@ class MysqlStreamingHandler extends BaseStreamingHandler {
 
   public on(event: 'end', callback: () => void): this;
 
-  public on(event: string, callback: (param: any) => void): this {
+  public on(event: string, callback: Function): this {
     this._mysqlQuery.on(event, callback);
 
     return this;

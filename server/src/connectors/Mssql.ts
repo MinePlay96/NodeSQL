@@ -1,11 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable id-length */
+
 import { BaseConnector, BaseStreamingHandler } from '../BaseConnector';
 import { IBaseField, IBaseRow, IConnectionOptions } from '../interfaces';
 
 // TODO: mayby add own d.ts file
+// eslint-disable-next-line max-len
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 const mssql = require('mssql');
 
@@ -33,7 +36,7 @@ class MssqlStreamingHandler extends BaseStreamingHandler {
 
   public on(event: 'end', callback: () => void): this;
 
-  public on(event: string, callback: (param: any) => void): this {
+  public on(event: string, callback: Function): this {
     this._mssqlQuery.on(this._mssqlEventMap[event], callback);
 
     return this;
