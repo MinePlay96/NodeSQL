@@ -34,13 +34,17 @@ export default async function requestHandler(socket: socketIo.Socket): Promise<v
   function authHandler(connectionData: IAuthData): void {
     const { connector: connectorName, ...authData } = connectionData;
 
-    // TODO: solve this better
-    isAuthed = true;
-    // TODO: add Check if it is set connectors[authData.connector](authData)
+    if (!(connectorName in connectors)) {
+      socket.emit('error', new Error('connector not found'));
+
+      return;
+    }
     connector = new connectors[connectorName](authData);
     connector.connect()
       .then(() => {
         socket.emit('authed', { templateQuerys: connector.getTemplateQuerys() });
+        // TODO: solve this better
+        isAuthed = true;
       })
       .catch((err: Error) => {
         socket.emit('exeption', err.stack);
@@ -50,6 +54,7 @@ export default async function requestHandler(socket: socketIo.Socket): Promise<v
   socket.on('auth', authHandler);
   socket.on('query', queryHandler);
 
+  // TODO: finde a good way to handel this
   socket.on('error', (error: Error) => socket.emit('exeption', error.stack));
   socket.on('disconnect', () => {
     if (isAuthed) {
