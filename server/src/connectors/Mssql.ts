@@ -5,7 +5,9 @@
 /* eslint-disable id-length */
 
 import { BaseConnector, BaseStreamingHandler } from '../BaseConnector';
-import { IBaseField, IBaseRow, IConnectionOptions, ITemplateQuerys } from '../interfaces';
+import {
+  IBaseField, IBaseRow, IConnectionOptions, ITemplateQuerys
+} from '../interfaces';
 
 // TODO: mayby add own d.ts file
 // eslint-disable-next-line max-len

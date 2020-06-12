@@ -18,7 +18,7 @@ export async function loadConnector(name: string): Promise<IConnectorData> {
   };
 }
 
-// REDO: make it better
+// REDO: make it better / perfomanter it requiers first time around 1.7s
 export async function loadConnectors(): Promise<IConnectors> {
   if (Object.keys(connectors).length > Number(null)) {
     return connectors;

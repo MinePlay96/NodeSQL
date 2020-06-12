@@ -13,16 +13,6 @@ router.use(express.static(PUBLIC_PATH, {
   maxAge: CACHE_MAX_AGE
 }));
 
-router.get('/connectors', (req, res) => {
-  loadConnectors().then(connectors => {
-    const connectorNames = Object.keys(connectors);
-
-    res.type('application/json');
-    res.send(JSON.stringify(connectorNames));
-  })
-    .catch(console.error);
-});
-
 router.use('/*', express.static(path.join(PUBLIC_PATH, 'index.html')));
 
 export default router;

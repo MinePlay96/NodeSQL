@@ -1,6 +1,8 @@
 /* eslint-disable id-length */
 import { BaseConnector, BaseStreamingHandler } from '../BaseConnector';
-import { IBaseField, IBaseRow, IConnectionOptions, ITemplateQuerys } from '../interfaces';
+import {
+  IBaseField, IBaseRow, IConnectionOptions, ITemplateQuerys
+} from '../interfaces';
 
 import mysql from 'mysql2';
 

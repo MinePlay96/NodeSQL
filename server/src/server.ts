@@ -1,6 +1,7 @@
 import socketIo from 'socket.io';
 import requestHandler from './requestHandler';
 import WebServer from './WebServer';
+import { loadConnectors } from './connectorLoader';
 
 // TODO: add good loging
 
@@ -9,7 +10,10 @@ const SERVER_PORT = 3000;
 const webServer = new WebServer();
 const socketIoServer = socketIo(webServer.httpServer);
 
-webServer.listen(SERVER_PORT)
+// TODO: Clean up
+// load connectors on startup for performance reasons
+loadConnectors()
+  .then(async() => webServer.listen(SERVER_PORT))
   .then(() => {
     console.log(`server startet on ${SERVER_PORT}`);
   })
@@ -20,6 +24,6 @@ webServer.listen(SERVER_PORT)
 socketIoServer.on('connection', socket => {
   requestHandler(socket)
     .catch(error => {
-      socket.emit('error', error);
+      socket.emit('exeption', error);
     });
 });

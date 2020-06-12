@@ -4,6 +4,7 @@ import { IAuthData } from './interfaces';
 
 import socketIo from 'socket.io';
 
+// TODO: remove functions from socpe mayby to object ?
 export default async function requestHandler(socket: socketIo.Socket): Promise<void> {
 
   // eslint-disable-next-line max-len
@@ -13,6 +14,8 @@ export default async function requestHandler(socket: socketIo.Socket): Promise<v
 
   let isAuthed = false;
   let connector: BaseConnector;
+
+  socket.emit('initData', { connectors: Object.keys(connectors) });
 
   function queryHandler(query: string): void {
     if (!isAuthed) {
@@ -39,15 +42,15 @@ export default async function requestHandler(socket: socketIo.Socket): Promise<v
       .then(() => {
         socket.emit('authed', { templateQuerys: connector.getTemplateQuerys() });
       })
-      .catch(err => {
-        socket.emit('error', err);
+      .catch((err: Error) => {
+        socket.emit('exeption', err.stack);
       });
   }
 
   socket.on('auth', authHandler);
   socket.on('query', queryHandler);
 
-  socket.on('error', error => socket.emit('exeption', error));
+  socket.on('error', (error: Error) => socket.emit('exeption', error.stack));
   socket.on('disconnect', () => {
     if (isAuthed) {
       connector.close();
