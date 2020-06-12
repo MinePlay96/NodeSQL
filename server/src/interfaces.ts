@@ -24,3 +24,12 @@ export interface IConnectionOptions {
   database?: string;
   port?: number;
 }
+
+// TODO: add import / update / delete querys
+// TODO: change to array of query parts / object etc.
+export interface ITemplateQuerys {
+  getDatabases: string;
+  getTablesByDatabase: string;
+  getFieldsByTable: string;
+  limitQuery: string;
+}

@@ -6,6 +6,7 @@ import socketIo from 'socket.io';
 
 export default async function requestHandler(socket: socketIo.Socket): Promise<void> {
 
+  // eslint-disable-next-line max-len
   // TODO: add error handler so that i can just throw errors and they get send over the socket
   // TODO: move in global scope
   const connectors = await loadConnectors();
@@ -36,7 +37,7 @@ export default async function requestHandler(socket: socketIo.Socket): Promise<v
     connector = new connectors[connectorName](authData);
     connector.connect()
       .then(() => {
-        socket.emit('authed', true);
+        socket.emit('authed', { templateQuerys: connector.getTemplateQuerys() });
       })
       .catch(err => {
         socket.emit('error', err);

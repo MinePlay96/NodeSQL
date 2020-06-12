@@ -1,6 +1,6 @@
 /* eslint-disable id-length */
 import { BaseConnector, BaseStreamingHandler } from '../BaseConnector';
-import { IBaseField, IBaseRow, IConnectionOptions } from '../interfaces';
+import { IBaseField, IBaseRow, IConnectionOptions, ITemplateQuerys } from '../interfaces';
 
 import mysql from 'mysql2';
 
@@ -60,5 +60,14 @@ export default class MysqlConnector extends BaseConnector {
 
   public close(): void {
     this._mysql.destroy();
+  }
+
+  public getTemplateQuerys(): ITemplateQuerys {
+    return {
+      getDatabases: 'SHOW DATABASES',
+      getFieldsByTable: 'SHOW COLUMNS IN {{database}}.{{table}}',
+      getTablesByDatabase: 'SHOW TABLES IN {{database}}',
+      limitQuery: '{{query}} LIMIT {{amount}}'
+    };
   }
 }

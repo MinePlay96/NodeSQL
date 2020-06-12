@@ -1,5 +1,4 @@
 import express from 'express';
-import { loadConnectors } from './connectorLoader';
 import http from 'http';
 import router from './webRouter';
 

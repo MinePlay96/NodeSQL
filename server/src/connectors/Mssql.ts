@@ -5,7 +5,7 @@
 /* eslint-disable id-length */
 
 import { BaseConnector, BaseStreamingHandler } from '../BaseConnector';
-import { IBaseField, IBaseRow, IConnectionOptions } from '../interfaces';
+import { IBaseField, IBaseRow, IConnectionOptions, ITemplateQuerys } from '../interfaces';
 
 // TODO: mayby add own d.ts file
 // eslint-disable-next-line max-len
@@ -14,18 +14,18 @@ const mssql = require('mssql');
 
 class MssqlStreamingHandler extends BaseStreamingHandler {
 
-  private _mssqlQuery: any;
+  private _mssql: any;
 
   private _mssqlEventMap: {[eventName: string]: string} = {
-    done: 'end',
+    end: 'done',
     error: 'error',
-    recordset: 'fields',
-    row: 'result'
+    fields: 'recordset',
+    result: 'row'
   };
 
   public constructor(query: any) {
     super();
-    this._mssqlQuery = query;
+    this._mssql = query;
   }
 
   public on(event: 'error', callback: (err: Error) => void): this;
@@ -37,7 +37,14 @@ class MssqlStreamingHandler extends BaseStreamingHandler {
   public on(event: 'end', callback: () => void): this;
 
   public on(event: string, callback: Function): this {
-    this._mssqlQuery.on(this._mssqlEventMap[event], callback);
+    if (event === 'fields') {
+      // TODO: define respose body for all propertys
+      this._mssql.on(this._mssqlEventMap[event], (data: {[fieldName: string]: object}) => {
+        callback(Object.values(data));
+      });
+    } else {
+      this._mssql.on(this._mssqlEventMap[event], callback);
+    }
 
     return this;
   }
@@ -45,7 +52,6 @@ class MssqlStreamingHandler extends BaseStreamingHandler {
 }
 
 export default class MssqlConnector extends BaseConnector {
-
   private _mssql: any;
 
   public constructor(connectionOptions: IConnectionOptions) {
@@ -74,11 +80,27 @@ export default class MssqlConnector extends BaseConnector {
   }
 
   public query(query: string): MssqlStreamingHandler {
-    return new MssqlStreamingHandler(this._mssql.query(query));
+    const request = this._mssql.request();
+
+    request.stream = true;
+    request.query(query);
+
+    return new MssqlStreamingHandler(request);
   }
 
   public close(): void {
     this._mssql.close();
   }
 
+  public getTemplateQuerys(): ITemplateQuerys {
+    return {
+      getDatabases: 'SELECT * FROM sys.databases',
+      // TODO: add back compability to sql < 2005
+      getFieldsByTable: 'SELECT * FROM {{database}}.INFORMATION_SCHEMA.TABLES',
+      // TODO: check if this works
+      getTablesByDatabase: 'SELECT * FROM {{database}}.INFORMATION_SCHEMA.COLUMN WHERE TABLE_NAME = \'{{table}}\'',
+      // TODO: find a way
+      limitQuery: 'SELECT TOP {{amount}} {{queryNoSelect}}'
+    };
+  }
 }

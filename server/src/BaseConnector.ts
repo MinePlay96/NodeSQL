@@ -1,4 +1,6 @@
-import { IBaseField, IBaseRow, IConnectionOptions } from './interfaces';
+import {
+  IBaseField, IBaseRow, IConnectionOptions, ITemplateQuerys
+} from './interfaces';
 
 
 export abstract class BaseStreamingHandler {
@@ -24,4 +26,7 @@ export abstract class BaseConnector {
   public abstract query(query: string): BaseStreamingHandler;
 
   public abstract close(): void;
+
+  // TODO: define query response fields
+  public abstract getTemplateQuerys(): ITemplateQuerys;
 }
